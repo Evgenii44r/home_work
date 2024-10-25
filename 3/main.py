@@ -8,7 +8,7 @@ KEY_D = 68
 
 def check_collision():
     if player.intersects(enemy):
-        print('танки столькнулись')
+        print('танки столкнулись')
 
 def key_press(event):
     if event.keycode ==KEY_W:
