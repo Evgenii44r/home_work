@@ -36,6 +36,7 @@ class Tank:
         if self.__y<0:
             self.__y = 0
         self.__create()
+        self.right()
 
     def fire(self):
         if self.__ammo >0:
