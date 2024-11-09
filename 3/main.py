@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 
-=======
 from tank import Tank
 from tkinter import *
 import world
@@ -47,4 +45,4 @@ enemy.set_target(player)
 w.bind('<KeyPress>', key_press)
 update()
 w.mainloop()
->>>>>>> 151b33969209d9139720a4584bce4d76bfd58218
+
