@@ -8,7 +8,6 @@ KEY_A = 65
 KEY_D = 68
 
 FPS = 60
-
 def update():
     player.update()
     enemy.update()
