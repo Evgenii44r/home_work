@@ -3,28 +3,15 @@ from tkinter import *
 from random import randint
 import world
 
-# 5 теперь изображения танков будут грузиться из модуля texture
 import texture as skin
 
-
-# 6 внесем изменния в инициализатор
 class Tank:
     __count = 0
 
-    def __init__(self, canvas, x, y,model = 'Т-14 Армата',
-                 ammo = 100, speed = 10,
-                 # file_up = '../img/tankT34_up.png',
-                 # file_down = '../img/tankT34_down.png',
-                 # file_left = '../img/tankT34_left.png',
-                 # file_right = '../img/tankT34_right.png',
-
-                 bot = True):
+    def __init__(self, canvas, x, y, model='Т-14 Армата',
+                 ammo=100, speed=10, bot=True):
         self.__bot = bot
         self.__target = None
-        # self.__skin_up = PhotoImage(file = file_up)
-        # self.__skin_down = PhotoImage(file = file_down)
-        # self.__skin_left = PhotoImage(file = file_left)
-        # self.__skin_right = PhotoImage(file = file_right)
         Tank.__count += 1
         self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=0)
         self.__canvas = canvas
@@ -88,8 +75,6 @@ class Tank:
             self.__ammo -= 1
             print('стреляю')
 
-
-# 7 Установить текстуры при смене напрвлений
     def forvard(self):
         self.__vx = 0
         self.__vy = -1
@@ -134,7 +119,6 @@ class Tank:
             self.__chek_out_of_world()
             self.__repaint()
 
-
     def __undo_move(self):
         if self.__dx == 0 and self.__dy == 0:
             return
@@ -145,7 +129,6 @@ class Tank:
         self.__dx = 0
         self.__dy = 0
 
-# 8 Изменим код создания изображения на холсте
     def __create(self):
         self.__id = self.__canvas.create_image(self.__x, self.__y,
                                                image = skin.get('tank_up'), anchor ='nw')
@@ -202,8 +185,8 @@ class Tank:
     def __chek_out_of_world(self):
         if self.__hitbox.left < 0 or \
                 self.__hitbox.top < 0 or \
-                self.__hitbox.right >= world.WIDTH or \
-                self.__hitbox.bottom >= world.HEIGHT:
+                self.__hitbox.right >= world.get_widht() or \
+                self.__hitbox.bottom >= world.get_height():
             self.__undo_move()
             if self.__bot:
                 self.__AI_change_orientation()
@@ -219,4 +202,3 @@ class Tank:
     def __str__(self):
         return (f'координаты: x = {self.__x}, y = {self.__y}, модель: {self.__model}, '
                 f'здоровье: {self.__hp}, опыт: {self.__xp}, боеприпасы: {self.__ammo}')
-
