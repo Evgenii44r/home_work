@@ -32,12 +32,23 @@ class Tank:
         self.__create()
         self.right()
         print(self)
+        self.__usual_speed = speed
+        self.__water_speed = speed /2
+    def __set_usual_speed(self):
+        self.__speed = self.__usual_speed
+    def __set_water_speed(self):
+        self.__speed = self.__water_speed
     def __check_map_collision(self):
-        result = self.__hitbox.check_map_collision()
+        details = {}
+        self.__set_usual_speed()
+        result = self.__hitbox.check_map_collision(details)
         if result:
-            self.__undo_move()
-            if self.__bot:
-                self.__AI_change_orientation()
+            if details['block'] == world.WATER:
+                self.__set_water_speed()
+            else:
+                self.__undo_move()
+                if self.__bot:
+                    self.__AI_change_orientation()
 
     def set_target(self, target):
         self.__target = target
