@@ -4,14 +4,16 @@ from random import randint
 import world
 
 import texture as skin
+
 class Tank:
     __count = 0
+
     def __init__(self, canvas, x, y, model='Т-14 Армата',
                  ammo=100, speed=10, bot=True):
         self.__bot = bot
         self.__target = None
         Tank.__count += 1
-        self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=2)
+        self.__hitbox = Hitbox(x, y, self.get_size(), self.get_size(), padding=4)
         self.__canvas = canvas
         self.__model = model
         self.__hp = 100
@@ -29,16 +31,22 @@ class Tank:
             self.__x = 0
         if self.__y < 0:
             self.__y = 0
+
         self.__create()
         self.right()
-        print(self)
+
         self.__usual_speed = speed
-        self.__water_speed = speed /2
+        self.__water_speed = speed/2
+
+        print(self)
+
     def __set_usual_speed(self):
         self.__speed = self.__usual_speed
+
     def __set_water_speed(self):
         self.__speed = self.__water_speed
-    def __check_map_collision(self):
+
+    def __check_map_collocation(self):
         details = {}
         self.__set_usual_speed()
         result = self.__hitbox.check_map_collision(details)
@@ -52,6 +60,7 @@ class Tank:
 
     def set_target(self, target):
         self.__target = target
+
     def __AI_goto_target(self):
         if randint(1,2) == 1:
             if self.__target.get_x() < self.get_x():
@@ -81,6 +90,7 @@ class Tank:
             self.right()
         if rand == 3:
             self.backward()
+
     def fire(self):
         if self.__ammo > 0:
             self.__ammo -= 1
@@ -128,7 +138,7 @@ class Tank:
 
             self.__update_hitbox()
             self.__chek_out_of_world()
-            self.__check_map_collision()
+            self.__check_map_collocation()
             self.__repaint()
 
     def __undo_move(self):

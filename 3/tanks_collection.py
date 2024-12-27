@@ -1,3 +1,4 @@
+
 from random import randint
 from tank import Tank
 import world
@@ -11,11 +12,10 @@ def initialize(canv):
     _canvas = canv
     spawn(False)
     for i in range(5):
-        spawn(True)
+        spawn(True).set_target(get_player())
 
 def get_player():
     return _tanks[0]
-
 
 def update():
     for tank in _tanks:
@@ -31,15 +31,30 @@ def check_collision(tank):
             return True
     return False
 
-def spawn(is_bot=True):
-    cols = world.get_cols()
+def spawn_enemy():
+    pos_x = randint(200, world.WIDTH - 200)
+    pos_y = randint(200, world.HEIGHT - 200)
+    t = Tank(_canvas, x=pos_x, y=pos_y, speed=1)
+
+
+    t.set_target(get_player())
+    _tanks.append(t)
+
+def spawn(is_bot = True):
+    cols  = world.get_cols()
     rows = world.get_rows()
+
     while True:
-        col = randint(1, cols-1)
-        row = randint(1, rows-1)
-        if world.get_block(row,col) !=world.GROUND:
+        col = randint(1,cols-1)
+        row = randint(1,rows-1)
+
+        if world.get_block(row, col) != world.GROUND:
             continue
-        t = Tank(_canvas, x=col*world.BLOCK_SIZE,y=row* world.BLOCK_SIZE,speed = 2,bot = is_bot)
+
+        t = Tank(_canvas,x = col*world.BLOCK_SIZE,
+                 y = row*world.BLOCK_SIZE,
+                    speed = 2,bot = is_bot)
+
         if not check_collision(t):
             _tanks.append(t)
-            return True
+            return t
