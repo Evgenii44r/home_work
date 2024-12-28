@@ -9,6 +9,7 @@ GROUND = 'g'
 WATER = 'w'
 CONCRETE = 'c'
 BRICK = 'b'
+MISSLE = 'm'
 
 BLOCK_SIZE = 64
 
@@ -50,7 +51,7 @@ def create_map(rows = 20, cols = 20):
             if i == 0 or j == 0 or i == rows-1 or j == cols - 1:
                 block = CONCRETE
             elif randint(1, 100) <= 15:
-                block = choice([WATER, GROUND, BRICK])
+                block = choice([WATER, BRICK,CONCRETE,MISSLE])
             cell = _Cell(_canvas, block, BLOCK_SIZE*j, BLOCK_SIZE*i)
             row.append(cell)
         _map.append(row)
@@ -138,6 +139,10 @@ def _inside_of_map(row,col):
     if row < 0 or col < 0 or row >= get_rows() or col >= get_cols():
         return False
     return True
+def take(row,col):
+    if _inside_of_map(row,col):
+        return _map[row][col].take()
+    return AIR
 
 class _Cell:
     def __init__(self, canvas,block,x,y):
@@ -168,7 +173,13 @@ class _Cell:
             self.__canvas.delete(self.__id)
         except:
             pass
-
+    def take(self):
+        block = self.get_block()
+        if block == MISSLE:
+            self.set_block(GROUND)
+            return block
+        else:
+            return AIR
 
     def __create_element(self,block):
         if block != GROUND:
