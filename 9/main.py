@@ -1,5 +1,5 @@
 from tank import Tank
-from tkinter import*
+from tkinter import *
 
 import world
 import tanks_collection
@@ -13,14 +13,15 @@ KEY_A = 65
 KEY_D = 68
 
 FPS = 60
+
+
 def update():
     tanks_collection.update()
     player = tanks_collection.get_player()
-    world.set_camera_xy(player.get_x()-world.SCREEN_WIDTH//2 + player.get_size()//2,
-                        player.get_y()-world.SCREEN_HEIGHT//2 + player.get_size()//2)
+    world.set_camera_xy(player.get_x() - world.SCREEN_WIDTH // 2 + player.get_size() // 2,
+                        player.get_y() - world.SCREEN_HEIGHT // 2 + player.get_size() // 2)
     world.update_map()
-    w.after(1000//FPS, update)
-
+    w.after(1000 // FPS, update)
 
 
 def key_press(event):
@@ -42,22 +43,22 @@ def key_press(event):
     elif event.keycode == KEY_RIGHT:
         world.move_camera(5, 0)
 
-    elif event.keycode == 32:
-        tanks_collection.spawn_enemy()
 
 def load_textures():
     texture.load('tank_up',
-                 '../img/tank_up.png')
+                  '../img/tank_up.png')
     texture.load('tank_down',
-                 '../img/tank_down.png')
+                  '../img/tank_down.png')
     texture.load('tank_left',
-                 '../img/tank_left.png')
+                  '../img/tank_left.png')
     texture.load('tank_right',
-                 '../img/tank_right.png')
-    texture.load(world.BRICK,'../img/brick.png')
+                  '../img/tank_right.png')
+    texture.load(world.BRICK, '../img/brick.png')
     texture.load(world.WATER, '../img/water.png')
-    texture.load(world.CONCRETE,'../img/wall.png' )
-    texture.load(world.MISSLE,'../img/bonus.png')
+    texture.load(world.CONCRETE, '../img/wall.png')
+
+    texture.load(world.MISSLE, '../img/bonus.png')
+
 
 w = Tk()
 
