@@ -45,8 +45,7 @@ class Ball(tk.Canvas):
             self.x + self.r,
             self.y + self.r,
             fill="blue",
-            outline="black"
-        )
+            outline="black")
 
     def move(self):
         # Проверка границ окна
