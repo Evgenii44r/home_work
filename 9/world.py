@@ -196,7 +196,7 @@ class _Cell:
         elif self.__block == GROUND:
             self.__create_element(block)
         else:
-            self.itemconfig(self.__id, image=textytre.get(block))
+            self.itemconfig(self.__id, image=texture.get(block))
         self.__block = block
 
     def __create_element(self, block):
