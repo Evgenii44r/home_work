@@ -121,7 +121,7 @@ class Tank:
         self.__vx = 0
         self.__vy = -1
         self.__canvas.itemconfig(self.__id,
-                                 image=skin.get('tank_up'))
+                                 image=skin.get('tank_forward_player'))
 
     def backward(self):
         self.__vx = 0
@@ -139,7 +139,7 @@ class Tank:
         self.__vx = 1
         self.__vy = 0
         self.__canvas.itemconfig(self.__id,
-                                 image=skin.get('tank_right'))
+                                 image=skin.get('tank_right_player'))
 
     def stop(self):
         self.__vx = 0

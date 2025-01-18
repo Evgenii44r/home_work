@@ -1,6 +1,7 @@
 import texture as skin
 import world
 from hitbox import Hitbox
+
 from tkinter import NW
 from random import randint
 class Unit:
@@ -64,7 +65,124 @@ class Unit:
         self._dy = self._vy * self._speed
         self._x += self._dx
         self._y += self._dy
+        self._update_hitbox()
+        self._check_map_collision()
+        self._repaint()
     def _AI(self):
         pass
     def _update_hitbox(self):
         self._hitbox.moveto(self._x,self._y)
+    def _check_map_collision(self):
+        details = {}
+        results = self._hitbox.check_map_collision(details)
+        if results:
+            self._on_map_collision(details)
+        else:
+            self._no_map_collision()
+    def _on_map_collision(self,details):
+        if world.WATER in details and len(details) == 1:
+            self._set_water_speed()
+        elif world.MiSSLE in details:
+            pos = details[world.MISSLE]
+            if world.take(pos['row'], pos['col'])!= world.AIR:
+                self._take_ammo()
+        else:
+            self._undo_move()
+            if self._bot:
+                self._change_orientation()
+    def _no_map_collision(self):
+        self._set_usual_speed()
+    def _repaint(self):
+        screen_x = world.get_screen_x(self._x)
+        screen_y = world.get_screen_y(self._y)
+        self._canvas.moveto(self._id, x=screen_x, y=screen_y)
+    def _undo_move(self):
+        if self._dx == 0 and self._dy == 0:
+            return
+        self._x -= self._dx
+        self._y -= self._dy
+        self._update_hitbox()
+        self._repaint()
+        self._dx = 0
+        self._dy = 0
+    def intersects(self,other_unit):
+        value = self._hitbox.intersects(other_unit._hitbox)
+        if value:
+            self._on_intersects(other_unit)
+        return value
+    def _on_intersects(self, other_unit):
+        super()._on_intersects(other_unit)
+        if self._bot:
+            self._change_orientation()
+    def _change_orientation(self):
+        rand = randint(0,3)
+        if rand == 0:
+            self.left()
+        elif rand ==1:
+            self.forvard()
+        elif rand == 2:
+            self.right()
+        elif rand == 3:
+            self.backward()
+    def get_hp(self):
+        return self._hp
+    def get_speed(self):
+        return self._speed
+    def get_x(self):
+        return self._x
+    def get_y(self):
+        return self._y
+    def get_vx(self):
+        return self._vx
+    def get_vy(self):
+        return self._vy
+    def get_size(self):
+        return world.BLOCK_SIZE
+    def is_bot(self):
+        return self._bot
+class Tank:
+    def __init__(self,canvas,row,col,bot =True):
+        super().__init__(canvas,col*world.BLOCK_SIZE,row*world.BLOCK_SIZE,2,8,bot,'player_tank_forward')
+        if bot:
+            self._forward_image = 'tank_up.png'
+            self._backward_image = 'tank_down.png'
+            self._left_image = 'tank_left.png'
+            self._right_image = 'tank_right.png'
+        else:
+
+            self._forward_image = 'player_tank_forward.png'
+            self._backward_image = 'player_tank_down.png'
+            self._left_image = 'player_tank_left.png'
+            self._right_image = 'player_tank_right.png'
+    def set_target(self,target):
+        self._target = target
+    def _AI_goto_target(self):
+        if randint (1,2) == 1:
+            if self._target.get_x() < self.get_x():
+                self.left()
+            else:
+                self.right()
+        else:
+            if self._target.get_y() < self.get_y():
+                self.forward()
+            else:
+                self.backward()
+    def _Ai(self):
+        if randint(1,30) == 1:
+            if randint(1,10) < 9 and self._target is not None:
+                self._AI_goto_target()
+            else:
+                self._change_orientation()
+    def fire(self):
+        if self._ammo > 0:
+            self._ammo -=1
+    def _take_ammo(self):
+        self._ammo += 10
+        if self._ammo > 100:
+            self._ammo = 100
+    def get_ammo(self):
+        return self._ammo
+    def _set_usual_speed(self):
+        self._speed = self._usual_speed
+    def _set_water_speed(self):
+        self._speed = self._water_speed

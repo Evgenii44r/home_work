@@ -9,9 +9,9 @@ _canvas = None
 def initialize(canv):
     global _canvas
     _canvas = canv
-    spawn(False)
-    for i in range(5):
-        spawn(True).set_target(get_player())
+    player = spawn(False)
+    enemy = spawn(True).set_target(get_player())
+    spawn(True).set_target(get_player())
 
 
 def get_player():
@@ -34,8 +34,8 @@ def check_collision(tank):
 
 
 def spawn_enemy():
-    pos_x = randint(200, world.WIDTH - 200)
-    pos_y = randint(200, world.HEIGHT - 200)
+    pos_x = randint(200, world.SCREEN_WIDTH - 200)
+    pos_y = randint(200, world.SCREEN_HEIGHT - 200)
     t = Tank(_canvas, x=pos_x, y=pos_y, speed=1)
 
     t.set_target(get_player())
@@ -53,9 +53,8 @@ def spawn(is_bot=True):
         if world.get_block(row, col) != world.GROUND:
             continue
 
-        t = Tank(_canvas, x=col * world.BLOCK_SIZE,
-                 y=row * world.BLOCK_SIZE,
-                 speed=2, bot=is_bot)
+        t = Tank(_canvas,row,col,bot = is_bot)
+
 
         if not check_collision(t):
             _tanks.append(t)
