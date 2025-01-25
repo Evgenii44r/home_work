@@ -1,5 +1,5 @@
 from hitbox import Hitbox
-
+import missle_collection
 from random import randint
 import world
 
@@ -116,6 +116,7 @@ class Tank:
         if self.__ammo > 0:
             self.__ammo -= 1
             print('стреляю')
+
 
     def forvard(self):
         self.__vx = 0

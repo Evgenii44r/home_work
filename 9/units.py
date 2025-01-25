@@ -1,3 +1,4 @@
+import missle_collection
 import world
 from hitbox import Hitbox
 import texture as skin
@@ -7,6 +8,7 @@ from random import randint
 
 class Unit:
     def __init__(self, canvas, x, y, speed, padding, bot, default_image):
+        self._destroyed = False
         self._speed = speed
         self._x = x
         self._y = y
@@ -25,6 +27,12 @@ class Unit:
         self._left_image = default_image
         self._right_image = default_image
         self._create()
+    def is_destroyed(self):
+        return self._destroyed
+    def destroy(self):
+        self._destroyed = True
+        self.stop()
+        self._speed = 0
 
     def _create(self):
         self._id = self._canvas.create_image(self._x, self._y,
@@ -204,6 +212,7 @@ class Tank(Unit):
     def fire(self):
         if self._ammo > 0:
             self._ammo -= 1
+            missle_collection.fire(self)
 
     def _set_usual_speed(self):
         self._speed = self._usual_speed
@@ -237,3 +246,33 @@ class Tank(Unit):
                 self._AI_goto_target()
             else:
                 self._change_orientation()
+class Missle(Unit):
+    def __init__(self,canvas,owner):
+        super().__init__(canvas,owner.get_x(),owner.get_y(),
+                         6,20,False,'missle_up')
+        self._owner = owner
+        self._forward_image = 'missle_up'
+        self._backward_image = 'missle_down'
+        self._left_image = 'missle_left'
+        self._right_image = 'missle_right'
+        if owner.get_vx() == 1 and owner.get_vy() == 0:
+            self.right()
+        elif owner.get_vx() == -1 and owner.get_vy() == 0:
+            self.left()
+        elif owner.get_vx() == 0 and owner.get_vy() == -1:
+            self.forward()
+        elif owner.get_vx() == 0 and owner.get_vy() == 1:
+            self.backward()
+        self._x += owner.get_vx() * self.get_size()//2
+        self._y += owner.get_vy() * self.get_size()//2
+        self._hitbox.set_blacklist([world.CONCRETE,world.BRICK])
+    def get_owner(self):
+        return self._owner
+    def _on_map_collision(self, details):
+        if world.BRICK in details:
+            row = details[world.BRICK]['row']
+            col = details[world.BRICK]['col']
+            world.destroy(row,col)
+            self.destroy()
+        if world.CONCRETE in details:
+            self.destroy()
