@@ -15,5 +15,11 @@ def update():
             del _missles[i]
         else:
             _missles[i].update()
-
-
+def check_missles_collection(tank):
+    for missle in _missles:
+        if missle.get_owner() == tank:
+            continue
+        if missle.intersect(tank):
+            missle.destroy()
+            tank.damage(25)
+            return
