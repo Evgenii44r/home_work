@@ -26,6 +26,7 @@ class Unit:
         self._backward_image = default_image
         self._left_image = default_image
         self._right_image = default_image
+        self._tank_destroy = default_image
         self._create()
     def damage(self,value):
         self._hp -= value
@@ -33,10 +34,14 @@ class Unit:
             self.destroy()
     def is_destroyed(self):
         return self._destroyed
+
     def destroy(self):
         self._destroyed = True
         self.stop()
         self._speed = 0
+        if self._hp == 0:
+            self._canvas.itemconfig(self._id,
+                                    image=skin.get(self._tank_destroy))
 
     def _create(self):
         self._id = self._canvas.create_image(self._x, self._y,
@@ -178,11 +183,13 @@ class Tank(Unit):
             self._backward_image = 'tank_down'
             self._left_image = 'tank_left'
             self._right_image = 'tank_right'
+            self._tank_destroy = 'tank_destroy'
         else:
             self._forward_image = 'tank_backward_player'
             self._backward_image = 'tank_forward_player'
             self._left_image = 'tank_left_player'
             self._right_image = 'tank_right_player'
+            self._tank_destroy = 'tank_destroy'
 
         self.forward()
         self._ammo = 80
@@ -279,7 +286,7 @@ class Tank(Unit):
                 self.fire()
             else:
                 self.backward()
-                self.fire() 
+                self.fire()
 class Missle(Unit):
     def __init__(self,canvas,owner):
         super().__init__(canvas,owner.get_x(),owner.get_y(),

@@ -178,11 +178,13 @@ class Tank(Unit):
             self._backward_image = 'tank_down'
             self._left_image = 'tank_left'
             self._right_image = 'tank_right'
+            self._tank_destroy = 'tank_destroy'
         else:
             self._forward_image = 'tank_backward_player'
             self._backward_image = 'tank_forward_player'
             self._left_image = 'tank_left_player'
             self._right_image = 'tank_right_player'
+            self._tank_destroy = 'tank_destroy'
 
         self.forward()
         self._ammo = 80
