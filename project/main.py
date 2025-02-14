@@ -12,7 +12,7 @@ KEY_W = 87
 KEY_S = 83
 KEY_A = 65
 KEY_D = 68
-FPS = 60
+FPS = 120
 
 
 def update():
