@@ -1,25 +1,32 @@
-from units import Missle
-import units
-_missles = []
+from units import Missile
+_missiles = []
 _canvas = None
+
+
 def initialize(canvas):
     global _canvas
     _canvas = canvas
+
+
 def fire(owner):
-    m = Missle(_canvas,owner)
-    _missles.append(m)
+    m = Missile(_canvas, owner)
+    _missiles.append(m)
+
+
 def update():
-    start = len(_missles)-1
-    for i in range(start,-1,-1):
-        if _missles[i].is_destroyed():
-            del _missles[i]
+    start = len(_missiles)-1
+    for i in range(start, -1, -1):
+        if _missiles[i].is_destroyed():
+            del _missiles[i]
         else:
-            _missles[i].update()
-def check_missles_collection(tank):
-    for missle in _missles:
-        if missle.get_owner() == tank:
+            _missiles[i].update()
+
+
+def check_missiles_collision(tank):
+    for missile in _missiles:
+        if missile.get_owner() == tank:
             continue
-        if missle.intersect(tank):
-            missle.destroy()
+        if missile.intersect(tank):
+            missile.destroy()
             tank.damage(25)
             return

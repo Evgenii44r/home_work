@@ -2,14 +2,15 @@ import world
 
 
 class Hitbox:
-    def __init__(self, x, y, width, height, padding=10):
+    def __init__(self, x, y, width, height, padding=2):
         self.padding = padding
         self.__x = x
         self.__y = y
         self.__set_width(width)
         self.__set_height(height)
         self.__black_list = [world.CONCRETE, world.WATER, world.BRICK, world.MISSLE]
-    def set_blacklist(self,black_list):
+
+    def set_blacklist(self, black_list):
         self.__black_list = black_list
 
     def __get_corner_points(self):
